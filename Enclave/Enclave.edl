@@ -1,0 +1,77 @@
+/* 
+*   Clonebuster
+* 
+*   file: Enclave.edl
+* 
+* Authors: Samira Briongos (samira.briongos@neclab.eu) 
+* 
+*          NEC Laboratories Europe GmbH --- PROPRIETARY INFORMATION 
+* 
+* The software and its source code contain valuable trade secrets and shall be maintained in
+* confidence and treated as confidential information. The software may only be used for evaluation 
+* and/or testing purposes, unless otherwise explicitly stated in the terms of a license agreement or 
+* nondisclosure agreement with NEC Laboratories Europe GmbH.
+
+* Any unauthorized publication, transfer to third parties or duplication of the object or source code –
+* either totally or in part - is strictly prohibited.
+*      Copyright (c) 2023 NEC Laboratories Europe GmbH  All Rights Reserved. 
+* 
+* NEC Laboratories Europe GmbH DISCLAIMS ALL WARRANTIES, EITHER EXPRESS OR 
+* IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY 
+* AND FITNESS FOR A PARTICULAR PURPOSE AND THE WARRANTY AGAINST LATENT 
+* DEFECTS, WITH RESPECT TO THE PROGRAM AND THE ACCOMPANYING 
+* DOCUMENTATION. 
+* 
+* NO LIABILITIES FOR CONSEQUENTIAL DAMAGES:
+* IN NO EVENT SHALL NEC Laboratories Europe GmbH or ANY OF ITS SUBSIDIARIES BE 
+* LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES
+* FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF INFORMATION, OR 
+* OTHER PECUNIARY LOSS AND INDIRECT, CONSEQUENTIAL, INCIDENTAL, 
+* ECONOMIC OR PUNITIVE DAMAGES) ARISING OUT OF THE USE OF OR INABILITY 
+* TO USE THIS PROGRAM, EVEN IF NEC Laboratories Europe GmbH HAS BEEN ADVISED OF 
+* THE POSSIBILITY OF SUCH DAMAGES. 
+* 
+*     THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY.
+*/ 
+
+
+/* Enclave.edl - Top EDL file. */
+
+enclave {
+    
+    include "user_types.h" /* buffer_t */
+
+    /* Import ECALL/OCALL from sub-directory EDLs.
+     *  [from]: specifies the location of EDL file. 
+     *  [import]: specifies the functions to import, 
+     *  [*]: implies to import all functions.
+     */
+    
+    /* from "Edger8rSyntax/Types.edl" import *;
+    from "Edger8rSyntax/Pointers.edl" import *;
+    from "Edger8rSyntax/Arrays.edl" import *;
+    from "Edger8rSyntax/Functions.edl" import *;
+
+    from "TrustedLibrary/Libc.edl" import *;
+    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
+    from "TrustedLibrary/Thread.edl" import *; */
+
+    from "ThreadLibrary/ThreadTest.edl" import *;
+
+    trusted {
+        public void printf_helloworld();
+        public void printfile_measurements([in, count=8] int *ways);
+    };
+
+    /* 
+     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
+     *  [in]: copy the string buffer to App outside.
+     *  [string]: specifies 'str' is a NULL terminated buffer.
+     */
+    untrusted {
+        void ocall_print_string([in, string] const char *str);
+        void ocall_print_timed_string([in, string] const char *str);
+        void ocall_write_plain_string([in, string] const char *str);
+    };
+
+};
